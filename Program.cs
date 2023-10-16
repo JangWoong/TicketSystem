@@ -1,5 +1,6 @@
 ﻿string file = "Tickets.csv";
 string choice;
+
 do
 {
     // ask user a question
@@ -16,7 +17,7 @@ do
         if (File.Exists(file))
         {
             // read data from file
-            StreamReader sr = new StreamReader(file);
+            StreamReader sr = new(file);
             while (!sr.EndOfStream)
             {
                 string line = sr.ReadLine();
@@ -33,14 +34,14 @@ do
     else if (choice == "2")
     {
         // create file from data
-        StreamWriter sw = new StreamWriter(file);
+        StreamWriter sw = new(file);
         // save header
         sw.WriteLine("TicketID, Summary, Status, Priority, Submitter, Assigned, Watching");
         bool datainput = true;
         int ticketID = 1;
 
         while (datainput)
-        {          
+        {
             Console.Write("Enter the Summary: ");
             string summary = Console.ReadLine();
 
@@ -60,7 +61,7 @@ do
             string watching = Console.ReadLine();
 
             // save 
-            sw.WriteLine($"{ticketID.ToString()},{summary},{status},{priority},{submitter},{assigned},{watching}");
+            sw.WriteLine($"\n{ticketID.ToString()},{summary},{status},{priority},{submitter},{assigned},{watching}");
             // ask a question
             Console.WriteLine("Do you want more input data (Y/N)? Pressing any key other than 'Y' will exit.");
             if(Console.ReadLine().ToUpper() == "Y")
@@ -80,7 +81,7 @@ do
             int ticketID = 1;
 
             // read data from file
-            StreamReader sr = new StreamReader(file);
+            StreamReader sr = new(file);
             while (!sr.EndOfStream)
             {
                 string line = sr.ReadLine();
