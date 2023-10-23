@@ -1,4 +1,12 @@
-﻿string file = "Tickets.csv";
+﻿using NLog;
+
+string path = Directory.GetCurrentDirectory() + "\\nlog.config";
+
+// create instance of Logger
+var logger = LogManager.Setup().LoadConfigurationFromFile(path).GetCurrentClassLogger();
+logger.Info("Program started");
+
+string file = "Tickets.csv";
 string choice;
 
 do
