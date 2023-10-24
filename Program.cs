@@ -18,6 +18,7 @@ do
     Console.WriteLine("Enter any other key to exit.");
     // input response
     choice = Console.ReadLine();
+    logger.Info($"User select is {choice}");
 
     if (choice == "1") // Read data
     {
@@ -98,107 +99,144 @@ do
     }
     else if (choice == "2") // create file 
     {
-        // create file from data
-        StreamWriter sw = new(file);
-        // save header
-        sw.WriteLine("TicketID, Summary, Status, Priority, Submitter, Assigned, Watching");
-        bool datainput = true;
-        int ticketID = 1;
+        int selectCreateFile = 0;
 
-        while (datainput)
+        Console.WriteLine("\tSelect create file.\n\t1) Tickets\t2) Enhancements\t3)Task");
+        bool selectCheck = int.TryParse(Console.ReadLine(), out selectCreateFile);
+        logger.Info($"User select is {selectCreateFile}");
+
+        if(selectCheck)
         {
-            Console.Write("Enter the Summary: ");
-            string summary = Console.ReadLine();
+            // read data from file
+            switch(selectCreateFile)
+            {
+                case 1: // Tickets
 
-            Console.Write("Enter the Status: ");
-            string status = Console.ReadLine();
+                // create file from data
+                StreamWriter sw = new(ticketsFile);
+                // save header
+                sw.WriteLine("TicketID, Summary, Status, Priority, Submitter, Assigned, Watching, Severity");
+                bool datainput = true;
+                int ticketID = 1;
 
-            Console.Write("Enter the Priority: ");
-            string priority = Console.ReadLine();
+                while (datainput)
+                {
+                    Console.Write("Enter the Summary: ");
+                    string summary = Console.ReadLine();
 
-            Console.Write("Enter the Submitter: ");
-            string submitter = Console.ReadLine();
+                    Console.Write("Enter the Status: ");
+                    string status = Console.ReadLine();
 
-            Console.Write("Enter the Assigned: ");
-            string assigned = Console.ReadLine();
+                    Console.Write("Enter the Priority: ");
+                    string priority = Console.ReadLine();
 
-            Console.Write("Enter the Watching: ");
-            string watching = Console.ReadLine();
+                    Console.Write("Enter the Submitter: ");
+                    string submitter = Console.ReadLine();
 
-            // save 
-            sw.WriteLine($"\n{ticketID.ToString()},{summary},{status},{priority},{submitter},{assigned},{watching}");
-            // ask a question
-            Console.WriteLine("Do you want more input data (Y/N)? Pressing any key other than 'Y' will exit.");
-            if(Console.ReadLine().ToUpper() == "Y")
-                datainput = true;
-            else
-                datainput = false;
+                    Console.Write("Enter the Assigned: ");
+                    string assigned = Console.ReadLine();
 
-            ticketID++;
+                    Console.Write("Enter the Watching: ");
+                    string watching = Console.ReadLine();
+
+                    Console.Write("Enter the Severity: ");
+                    string severity = Console.ReadLine();
+
+                    // save 
+                    sw.WriteLine($"\n{ticketID.ToString()},{summary},{status},{priority},{submitter},{assigned},{watching},{severity}");
+                    // ask a question
+                    Console.WriteLine("Do you want more input data (Y/N)? Pressing any key other than 'Y' will exit.");
+                    if(Console.ReadLine().ToUpper() == "Y")
+                        datainput = true;
+                    else
+                        datainput = false;
+
+                    ticketID++;
+                }
+                sw.Close();
+
+                break;
+
+            }
         }
-        sw.Close();
     }
     else if (choice == "3")
     {
-        // read data from file
-        if (File.Exists(file))
-        {
-            int ticketID = 1;
+        int selectAddFile = 0;
 
+        Console.WriteLine("\tSelect read file.\n\t1) Tickets\t2) Enhancements\t3)Task");
+        bool selectCheck = int.TryParse(Console.ReadLine(), out selectAddFile);
+        logger.Info($"User select is {selectAddFile}");
+
+        if(selectCheck)
+        {
             // read data from file
-            StreamReader sr = new(file);
-            while (!sr.EndOfStream)
+            switch(selectAddFile)
             {
-                string line = sr.ReadLine();
-                string[] arr = line.Split(',');
-                
-                // check the number
-                bool result  = int.TryParse(arr[0], out ticketID);
+                case 1: // Tickets
+                            // read data from file
+                    if (File.Exists(ticketsFile))
+                    {
+                        int ticketID = 1;
 
-                // display data
-                Console.WriteLine(line);
+                        // read data from file
+                        StreamReader sr = new(ticketsFile);
+                        while (!sr.EndOfStream)
+                        {
+                            string line = sr.ReadLine();
+                            string[] arr = line.Split(',');
+                            
+                            // check the number
+                            bool result  = int.TryParse(arr[0], out ticketID);
+
+                            // display data
+                            Console.WriteLine(line);
+                        }
+                        sr.Close();
+
+                        StreamWriter sw = File.AppendText(ticketsFile);
+                        bool datainput = true;
+
+                        while (datainput)
+                        {
+                            ticketID++;
+
+                            Console.Write("Enter the Summary: ");
+                            string summary = Console.ReadLine();
+
+                            Console.Write("Enter the Status: ");
+                            string status = Console.ReadLine();
+
+                            Console.Write("Enter the Priority: ");
+                            string priority = Console.ReadLine();
+
+                            Console.Write("Enter the Submitter: ");
+                            string submitter = Console.ReadLine();
+
+                            Console.Write("Enter the Assigned: ");
+                            string assigned = Console.ReadLine();
+
+                            Console.Write("Enter the Watching: ");
+                            string watching = Console.ReadLine();
+
+                            // save 
+                            sw.WriteLine($"\n{ticketID.ToString()},{summary},{status},{priority},{submitter},{assigned},{watching}");
+                            // ask a question
+                            Console.WriteLine("Do you want more input data (Y/N)? Pressing any key other than 'Y' will exit.");
+                            if(Console.ReadLine().ToUpper() == "Y")
+                                datainput = true;
+                            else
+                                datainput = false;
+                        }
+                        sw.Close();
+                    }
+                    else
+                    {
+                        Console.WriteLine("File does not exist");
+                    }
+
+                break;
             }
-            sr.Close();
-
-            StreamWriter sw = File.AppendText(file);
-            bool datainput = true;
-
-            while (datainput)
-            {
-                ticketID++;
-
-                Console.Write("Enter the Summary: ");
-                string summary = Console.ReadLine();
-
-                Console.Write("Enter the Status: ");
-                string status = Console.ReadLine();
-
-                Console.Write("Enter the Priority: ");
-                string priority = Console.ReadLine();
-
-                Console.Write("Enter the Submitter: ");
-                string submitter = Console.ReadLine();
-
-                Console.Write("Enter the Assigned: ");
-                string assigned = Console.ReadLine();
-
-                Console.Write("Enter the Watching: ");
-                string watching = Console.ReadLine();
-
-                // save 
-                sw.WriteLine($"\n{ticketID.ToString()},{summary},{status},{priority},{submitter},{assigned},{watching}");
-                // ask a question
-                Console.WriteLine("Do you want more input data (Y/N)? Pressing any key other than 'Y' will exit.");
-                if(Console.ReadLine().ToUpper() == "Y")
-                    datainput = true;
-                else
-                    datainput = false;
-            }
-            sw.Close();
-        }
-        else
-        {
-            Console.WriteLine("File does not exist");
         }
     }
 } while (choice == "1" || choice == "2"|| choice == "3");

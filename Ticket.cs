@@ -1,6 +1,7 @@
+using NLog;
 public class Ticket
 {
-    public string TicketID { get; set; }
+    public long TicketID { get; set; }
     public string Summary { get; set; }
     public string Status { get; set; }
     public string Priority {get; set; }
@@ -8,6 +9,12 @@ public class Ticket
     public string Assigned { get; set; }
     public string Watching { get; set; }
     public string Severity { get; set; }
+
+
+    public Ticket(string ticketFilePath)
+    {
+
+    }
 
     public string TacketInfo()
     {

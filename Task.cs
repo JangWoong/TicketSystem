@@ -1,6 +1,6 @@
 public class Task
 {
-    public string TicketID { get; set; }
+    public long TicketID { get; set; }
     public string Summary { get; set; }
     public string Status { get; set; }
     public string Priority {get; set; }
@@ -10,7 +10,7 @@ public class Task
     public string ProjectName { get; set; }
     public string DueDate { get; set; }
 
-    public string TacketInfo()
+    public string TaskInfo()
     {
         return $"{TicketID}, {Summary},{Status},{Priority},{Submitter},{Assigned},{Watching}, {ProjectName}, {DueDate}";
     }

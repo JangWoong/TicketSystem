@@ -1,6 +1,6 @@
 public class Enhancement
 {
-    public string TicketID { get; set; }
+    public long TicketID { get; set; }
     public string Summary { get; set; }
     public string Status { get; set; }
     public string Priority {get; set; }
@@ -12,7 +12,7 @@ public class Enhancement
     public string Reason { get; set; }
     public string Estimate { get; set; }
 
-    public string TacketInfo()
+    public string EnhancementInfo()
     {
         return $"{TicketID}, {Summary}, {Status}, {Priority}, {Submitter}, {Assigned}, {Watching}, {Software}, {Cost}, {Reason}, {Estimate}";
     }
