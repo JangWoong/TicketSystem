@@ -6,7 +6,7 @@ string path = Directory.GetCurrentDirectory() + "\\nlog.config";
 var logger = LogManager.Setup().LoadConfigurationFromFile(path).GetCurrentClassLogger();
 logger.Info("Program started");
 
-string file = "Tickets.csv";
+string ticketsFile = "Tickets.csv", enhancementsFile = "Enhancements.csv", taskFile = "Task.csv";
 string choice;
 
 do
@@ -19,27 +19,84 @@ do
     // input response
     choice = Console.ReadLine();
 
-    if (choice == "1")
+    if (choice == "1") // Read data
     {
-        // read data from file
-        if (File.Exists(file))
+        int selectReadFile = 0;
+
+        Console.WriteLine("\tSelect data file.\n\t1) Tickets\t2) Enhancements\t3)Task");
+        bool selectCheck = int.TryParse(Console.ReadLine(), out selectReadFile);
+        logger.Info($"User select is {selectReadFile}");
+
+        if(selectCheck)
         {
             // read data from file
-            StreamReader sr = new(file);
-            while (!sr.EndOfStream)
+            switch(selectReadFile)
             {
-                string line = sr.ReadLine();
-                // display data
-                Console.WriteLine(line);
+                case 1: // Tickets
+                    if (File.Exists(ticketsFile))
+                    {
+                        // read data from file
+                        StreamReader sr = new(ticketsFile);
+                        while (!sr.EndOfStream)
+                        {
+                            string line = sr.ReadLine();
+                            // display data
+                            Console.WriteLine(line);
+                        }
+                        sr.Close();
+                    }
+                    else
+                    {
+                        logger.Info("Tickets File does not exist");
+                    }
+                    break;
+                case 2: // Enhancements
+                    if (File.Exists(enhancementsFile))
+                    {
+                        // read data from file
+                        StreamReader sr = new(enhancementsFile);
+                        while (!sr.EndOfStream)
+                        {
+                            string line = sr.ReadLine();
+                            // display data
+                            Console.WriteLine(line);
+                        }
+                        sr.Close();
+                    }
+                    else
+                    {
+                        logger.Info("Enhancements File does not exist");
+                    }
+                    break;
+                case 3: // Task
+                    if (File.Exists(taskFile))
+                    {
+                        // read data from file
+                        StreamReader sr = new(taskFile);
+                        while (!sr.EndOfStream)
+                        {
+                            string line = sr.ReadLine();
+                            // display data
+                            Console.WriteLine(line);
+                        }
+                        sr.Close();
+                    }
+                    else
+                    {
+                        logger.Info("Task File does not exist");
+                    }
+                    break;
+                default:
+                    logger.Error($"{selectReadFile}: It is a wrong choice.");
+                    break;
             }
-            sr.Close();
         }
         else
         {
-            Console.WriteLine("File does not exist");
+            logger.Info($"Input Error.");
         }
     }
-    else if (choice == "2")
+    else if (choice == "2") // create file 
     {
         // create file from data
         StreamWriter sw = new(file);
@@ -145,3 +202,5 @@ do
         }
     }
 } while (choice == "1" || choice == "2"|| choice == "3");
+
+logger.Info("Program end");
