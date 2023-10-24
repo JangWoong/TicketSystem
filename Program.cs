@@ -157,6 +157,112 @@ do
 
                 break;
 
+                case 2: // Enhancements
+
+                // create file from data
+                StreamWriter swe = new(enhancementsFile);
+                // save header
+                swe.WriteLine("TicketID, Summary, Status, Priority, Submitter, Assigned, Watching, Software, Cost, Reason, Estimate");
+                bool dataEinput = true;
+                int ticketEID = 1;
+
+                while (dataEinput)
+                {
+                    Console.Write("Enter the Summary: ");
+                    string summary = Console.ReadLine();
+
+                    Console.Write("Enter the Status: ");
+                    string status = Console.ReadLine();
+
+                    Console.Write("Enter the Priority: ");
+                    string priority = Console.ReadLine();
+
+                    Console.Write("Enter the Submitter: ");
+                    string submitter = Console.ReadLine();
+
+                    Console.Write("Enter the Assigned: ");
+                    string assigned = Console.ReadLine();
+
+                    Console.Write("Enter the Watching: ");
+                    string watching = Console.ReadLine();
+
+                    Console.Write("Enter the Software: ");
+                    string software = Console.ReadLine();
+
+                    Console.Write("Enter the Cost: ");
+                    string cost = Console.ReadLine();
+
+                    Console.Write("Enter the Reason: ");
+                    string reason = Console.ReadLine();
+
+                    Console.Write("Enter the Estimate: ");
+                    string estimate = Console.ReadLine();
+
+
+                    // save 
+                    swe.WriteLine($"\n{ticketEID.ToString()},{summary},{status},{priority},{submitter},{assigned},{watching},{software},{cost},{reason},{estimate}");
+                    // ask a question
+                    Console.WriteLine("Do you want more input data (Y/N)? Pressing any key other than 'Y' will exit.");
+                    if(Console.ReadLine().ToUpper() == "Y")
+                        dataEinput = true;
+                    else
+                        dataEinput = false;
+
+                    ticketEID++;
+                }
+                swe.Close();
+
+                break;
+
+                case 3: // Task
+
+                // create file from data
+                StreamWriter swt = new(taskFile);
+                // save header
+                swt.WriteLine("TicketID, Summary, Status, Priority, Submitter, Assigned, Watching, ProjectName, DueDate");
+                bool dataTinput = true;
+                int ticketTID = 1;
+
+                while (dataTinput)
+                {
+                    Console.Write("Enter the Summary: ");
+                    string summary = Console.ReadLine();
+
+                    Console.Write("Enter the Status: ");
+                    string status = Console.ReadLine();
+
+                    Console.Write("Enter the Priority: ");
+                    string priority = Console.ReadLine();
+
+                    Console.Write("Enter the Submitter: ");
+                    string submitter = Console.ReadLine();
+
+                    Console.Write("Enter the Assigned: ");
+                    string assigned = Console.ReadLine();
+
+                    Console.Write("Enter the Watching: ");
+                    string watching = Console.ReadLine();
+
+                    Console.Write("Enter the ProjectName: ");
+                    string projectName = Console.ReadLine();
+
+                    Console.Write("Enter the DueDate: ");
+                    string dueDate = Console.ReadLine();
+
+                    // save 
+                    swt.WriteLine($"\n{ticketTID.ToString()},{summary},{status},{priority},{submitter},{assigned},{watching},{projectName},{dueDate}");
+                    // ask a question
+                    Console.WriteLine("Do you want more input data (Y/N)? Pressing any key other than 'Y' will exit.");
+                    if(Console.ReadLine().ToUpper() == "Y")
+                        dataTinput = true;
+                    else
+                        dataTinput = false;
+
+                    ticketTID++;
+                }
+                swt.Close();
+
+                break;
             }
         }
     }
@@ -170,11 +276,11 @@ do
 
         if(selectCheck)
         {
-            // read data from file
+            // add data from file
             switch(selectAddFile)
             {
                 case 1: // Tickets
-                            // read data from file
+                    // read data from file
                     if (File.Exists(ticketsFile))
                     {
                         int ticketID = 1;
@@ -219,8 +325,11 @@ do
                             Console.Write("Enter the Watching: ");
                             string watching = Console.ReadLine();
 
+                            Console.Write("Enter the Severity: ");
+                            string severity = Console.ReadLine();
+
                             // save 
-                            sw.WriteLine($"\n{ticketID.ToString()},{summary},{status},{priority},{submitter},{assigned},{watching}");
+                            sw.WriteLine($"\n{ticketID.ToString()},{summary},{status},{priority},{submitter},{assigned},{watching},{severity}");
                             // ask a question
                             Console.WriteLine("Do you want more input data (Y/N)? Pressing any key other than 'Y' will exit.");
                             if(Console.ReadLine().ToUpper() == "Y")
@@ -232,7 +341,153 @@ do
                     }
                     else
                     {
-                        Console.WriteLine("File does not exist");
+                        logger.Error($"{ticketsFile} File does not exist");
+                    }
+
+                break;
+                
+                case 2: // Enhancements
+                    // read data from file
+                    if (File.Exists(enhancementsFile))
+                    {
+                        int ticketID = 1;
+
+                        // read data from file
+                        StreamReader sr = new(enhancementsFile);
+                        while (!sr.EndOfStream)
+                        {
+                            string line = sr.ReadLine();
+                            string[] arr = line.Split(',');
+                            
+                            // check the number
+                            bool result  = int.TryParse(arr[0], out ticketID);
+
+                            // display data
+                            Console.WriteLine(line);
+                        }
+                        sr.Close();
+
+                        StreamWriter sw = File.AppendText(enhancementsFile);
+                        bool datainput = true;
+
+                        while (datainput)
+                        {
+                            ticketID++;
+
+                            Console.Write("Enter the Summary: ");
+                            string summary = Console.ReadLine();
+
+                            Console.Write("Enter the Status: ");
+                            string status = Console.ReadLine();
+
+                            Console.Write("Enter the Priority: ");
+                            string priority = Console.ReadLine();
+
+                            Console.Write("Enter the Submitter: ");
+                            string submitter = Console.ReadLine();
+
+                            Console.Write("Enter the Assigned: ");
+                            string assigned = Console.ReadLine();
+
+                            Console.Write("Enter the Watching: ");
+                            string watching = Console.ReadLine();
+
+                            Console.Write("Enter the Software: ");
+                            string software = Console.ReadLine();
+
+                            Console.Write("Enter the Cost: ");
+                            string cost = Console.ReadLine();
+
+                            Console.Write("Enter the Reason: ");
+                            string reason = Console.ReadLine();
+
+                            Console.Write("Enter the Estimate: ");
+                            string estimate = Console.ReadLine();
+
+                            // save 
+                            sw.WriteLine($"\n{ticketID.ToString()},{summary},{status},{priority},{submitter},{assigned},{watching},{software},{cost},{reason},{estimate}");
+                            // ask a question
+                            Console.WriteLine("Do you want more input data (Y/N)? Pressing any key other than 'Y' will exit.");
+                            if(Console.ReadLine().ToUpper() == "Y")
+                                datainput = true;
+                            else
+                                datainput = false;
+                        }
+                        sw.Close();
+                    }
+                    else
+                    {
+                        logger.Error($"{enhancementsFile} File does not exist");
+                    }
+
+                break;
+                
+                case 3: // Tickets
+                    // read data from file
+                    if (File.Exists(taskFile))
+                    {
+                        int ticketID = 1;
+
+                        // read data from file
+                        StreamReader sr = new(taskFile);
+                        while (!sr.EndOfStream)
+                        {
+                            string line = sr.ReadLine();
+                            string[] arr = line.Split(',');
+                            
+                            // check the number
+                            bool result  = int.TryParse(arr[0], out ticketID);
+
+                            // display data
+                            Console.WriteLine(line);
+                        }
+                        sr.Close();
+
+                        StreamWriter sw = File.AppendText(taskFile);
+                        bool datainput = true;
+
+                        while (datainput)
+                        {
+                            ticketID++;
+
+                            Console.Write("Enter the Summary: ");
+                            string summary = Console.ReadLine();
+
+                            Console.Write("Enter the Status: ");
+                            string status = Console.ReadLine();
+
+                            Console.Write("Enter the Priority: ");
+                            string priority = Console.ReadLine();
+
+                            Console.Write("Enter the Submitter: ");
+                            string submitter = Console.ReadLine();
+
+                            Console.Write("Enter the Assigned: ");
+                            string assigned = Console.ReadLine();
+
+                            Console.Write("Enter the Watching: ");
+                            string watching = Console.ReadLine();
+
+                            Console.Write("Enter the ProjectName: ");
+                            string projectName = Console.ReadLine();
+
+                            Console.Write("Enter the DueDate: ");
+                            string dueDate = Console.ReadLine();
+
+                            // save 
+                            sw.WriteLine($"\n{ticketID.ToString()},{summary},{status},{priority},{submitter},{assigned},{watching},{projectName},{dueDate}");
+                            // ask a question
+                            Console.WriteLine("Do you want more input data (Y/N)? Pressing any key other than 'Y' will exit.");
+                            if(Console.ReadLine().ToUpper() == "Y")
+                                datainput = true;
+                            else
+                                datainput = false;
+                        }
+                        sw.Close();
+                    }
+                    else
+                    {
+                        logger.Error($"{taskFile} File does not exist");
                     }
 
                 break;

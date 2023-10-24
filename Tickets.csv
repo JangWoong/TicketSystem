@@ -1,3 +1,5 @@
-TicketID, Summary, Status, Priority, Submitter, Assigned, Watching
+TicketID, Summary, Status, Priority, Submitter, Assigned, Watching, Severity
 
-1,movie,k,adf,ni,qqq,Yes
+1,space war,Good,Hight,Low,Yes,Yes,Low
+
+2,minians,Good,Low,Hight,Yes,Yes
