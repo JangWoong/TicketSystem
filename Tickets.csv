@@ -1,5 +1,5 @@
 TicketID, Summary, Status, Priority, Submitter, Assigned, Watching, Severity
 
-1,space war,Good,Hight,Low,Yes,Yes,Low
+1,space war,Good,High,Low,Yes,Yes,Low
 
-2,minians,Good,Low,Hight,Yes,Yes
+2,minians,Good,Low,High,Yes,Yes,High

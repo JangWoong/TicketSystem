@@ -6,7 +6,8 @@ string path = Directory.GetCurrentDirectory() + "\\nlog.config";
 var logger = LogManager.Setup().LoadConfigurationFromFile(path).GetCurrentClassLogger();
 logger.Info("Program started");
 
-string ticketsFile = "Tickets.csv", enhancementsFile = "Enhancements.csv", taskFile = "Task.csv";
+string ticketFile = "Tickets.csv", enhancementsFile = "Enhancements.csv", taskFile = "Task.csv";
+TicketsFile tf = new TicketsFile(ticketFile, enhancementsFile, taskFile);
 string choice;
 
 do
@@ -15,6 +16,7 @@ do
     Console.WriteLine("1) Read data from file.");
     Console.WriteLine("2) Create file from data.");
     Console.WriteLine("3) Add records to the file.");
+    Console.WriteLine("4) Search");
     Console.WriteLine("Enter any other key to exit.");
     // input response
     choice = Console.ReadLine();
@@ -22,73 +24,43 @@ do
 
     if (choice == "1") // Read data
     {
-        int selectReadFile = 0;
+        int selectData = 0;
 
         Console.WriteLine("\tSelect data file.\n\t1) Tickets\t2) Enhancements\t3)Task");
-        bool selectCheck = int.TryParse(Console.ReadLine(), out selectReadFile);
-        logger.Info($"User select is {selectReadFile}");
+        bool selectCheck = int.TryParse(Console.ReadLine(), out selectData);
+        logger.Info($"User select is {selectData}");
 
         if(selectCheck)
         {
             // read data from file
-            switch(selectReadFile)
+            switch(selectData)
             {
                 case 1: // Tickets
-                    if (File.Exists(ticketsFile))
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    foreach(Ticket t in tf.TicketList)
                     {
-                        // read data from file
-                        StreamReader sr = new(ticketsFile);
-                        while (!sr.EndOfStream)
-                        {
-                            string line = sr.ReadLine();
-                            // display data
-                            Console.WriteLine(line);
-                        }
-                        sr.Close();
+                        Console.WriteLine(t.Display());
                     }
-                    else
-                    {
-                        logger.Info("Tickets File does not exist");
-                    }
+                    Console.ForegroundColor = ConsoleColor.White;
                     break;
                 case 2: // Enhancements
-                    if (File.Exists(enhancementsFile))
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    foreach(Enhancement e in tf.EnhancementList)
                     {
-                        // read data from file
-                        StreamReader sr = new(enhancementsFile);
-                        while (!sr.EndOfStream)
-                        {
-                            string line = sr.ReadLine();
-                            // display data
-                            Console.WriteLine(line);
-                        }
-                        sr.Close();
+                        Console.WriteLine(e.Display());
                     }
-                    else
-                    {
-                        logger.Info("Enhancements File does not exist");
-                    }
+                    Console.ForegroundColor = ConsoleColor.White;
                     break;
                 case 3: // Task
-                    if (File.Exists(taskFile))
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    foreach(Task ta in tf.TaskList)
                     {
-                        // read data from file
-                        StreamReader sr = new(taskFile);
-                        while (!sr.EndOfStream)
-                        {
-                            string line = sr.ReadLine();
-                            // display data
-                            Console.WriteLine(line);
-                        }
-                        sr.Close();
+                        Console.WriteLine(ta.Display());
                     }
-                    else
-                    {
-                        logger.Info("Task File does not exist");
-                    }
+                    Console.ForegroundColor = ConsoleColor.White;
                     break;
                 default:
-                    logger.Error($"{selectReadFile}: It is a wrong choice.");
+                    logger.Error($"{selectData}: It is a wrong choice.");
                     break;
             }
         }
@@ -113,7 +85,7 @@ do
                 case 1: // Tickets
 
                 // create file from data
-                StreamWriter sw = new(ticketsFile);
+                StreamWriter sw = new(ticketFile);
                 // save header
                 sw.WriteLine("TicketID, Summary, Status, Priority, Submitter, Assigned, Watching, Severity");
                 bool datainput = true;
@@ -266,7 +238,7 @@ do
             }
         }
     }
-    else if (choice == "3")
+    else if (choice == "3") // Add data
     {
         int selectAddFile = 0;
 
@@ -281,55 +253,45 @@ do
             {
                 case 1: // Tickets
                     // read data from file
-                    if (File.Exists(ticketsFile))
+                    if (File.Exists(ticketFile))
                     {
-                        int ticketID = 1;
+                        Ticket ti = new Ticket();
 
                         // read data from file
-                        StreamReader sr = new(ticketsFile);
-                        while (!sr.EndOfStream)
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        foreach(Ticket t in tf.TicketList)
                         {
-                            string line = sr.ReadLine();
-                            string[] arr = line.Split(',');
-                            
-                            // check the number
-                            bool result  = int.TryParse(arr[0], out ticketID);
-
-                            // display data
-                            Console.WriteLine(line);
+                            Console.WriteLine(t.Display());
                         }
-                        sr.Close();
+                        Console.ForegroundColor = ConsoleColor.White;
 
-                        StreamWriter sw = File.AppendText(ticketsFile);
                         bool datainput = true;
 
                         while (datainput)
                         {
-                            ticketID++;
-
                             Console.Write("Enter the Summary: ");
-                            string summary = Console.ReadLine();
+                            ti.Summary = Console.ReadLine();
 
                             Console.Write("Enter the Status: ");
-                            string status = Console.ReadLine();
+                            ti.Status = Console.ReadLine();
 
                             Console.Write("Enter the Priority: ");
-                            string priority = Console.ReadLine();
+                            ti.Priority = Console.ReadLine();
 
                             Console.Write("Enter the Submitter: ");
-                            string submitter = Console.ReadLine();
+                            ti.Submitter = Console.ReadLine();
 
                             Console.Write("Enter the Assigned: ");
-                            string assigned = Console.ReadLine();
+                            ti.Assigned = Console.ReadLine();
 
                             Console.Write("Enter the Watching: ");
-                            string watching = Console.ReadLine();
+                            ti.Watching = Console.ReadLine();
 
                             Console.Write("Enter the Severity: ");
-                            string severity = Console.ReadLine();
+                            ti.Severity = Console.ReadLine();
 
                             // save 
-                            sw.WriteLine($"\n{ticketID.ToString()},{summary},{status},{priority},{submitter},{assigned},{watching},{severity}");
+                            tf.AddTicketList(ti);
                             // ask a question
                             Console.WriteLine("Do you want more input data (Y/N)? Pressing any key other than 'Y' will exit.");
                             if(Console.ReadLine().ToUpper() == "Y")
@@ -337,11 +299,10 @@ do
                             else
                                 datainput = false;
                         }
-                        sw.Close();
                     }
                     else
                     {
-                        logger.Error($"{ticketsFile} File does not exist");
+                        logger.Error($"{ticketFile} File does not exist");
                     }
 
                 break;
@@ -350,62 +311,52 @@ do
                     // read data from file
                     if (File.Exists(enhancementsFile))
                     {
-                        int ticketID = 1;
+                        Enhancement en = new Enhancement();
 
-                        // read data from file
-                        StreamReader sr = new(enhancementsFile);
-                        while (!sr.EndOfStream)
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        foreach(Enhancement e in tf.EnhancementList)
                         {
-                            string line = sr.ReadLine();
-                            string[] arr = line.Split(',');
-                            
-                            // check the number
-                            bool result  = int.TryParse(arr[0], out ticketID);
-
-                            // display data
-                            Console.WriteLine(line);
+                            Console.WriteLine(e.Display());
                         }
-                        sr.Close();
+                        Console.ForegroundColor = ConsoleColor.White;
 
-                        StreamWriter sw = File.AppendText(enhancementsFile);
                         bool datainput = true;
 
                         while (datainput)
                         {
-                            ticketID++;
-
                             Console.Write("Enter the Summary: ");
-                            string summary = Console.ReadLine();
+                            en.Summary = Console.ReadLine();
 
                             Console.Write("Enter the Status: ");
-                            string status = Console.ReadLine();
+                            en.Status = Console.ReadLine();
 
                             Console.Write("Enter the Priority: ");
-                            string priority = Console.ReadLine();
+                            en.Priority = Console.ReadLine();
 
                             Console.Write("Enter the Submitter: ");
-                            string submitter = Console.ReadLine();
+                            en.Submitter = Console.ReadLine();
 
                             Console.Write("Enter the Assigned: ");
-                            string assigned = Console.ReadLine();
+                            en.Assigned = Console.ReadLine();
 
                             Console.Write("Enter the Watching: ");
-                            string watching = Console.ReadLine();
+                            en.Watching = Console.ReadLine();
 
                             Console.Write("Enter the Software: ");
-                            string software = Console.ReadLine();
+                            en.Software = Console.ReadLine();
 
                             Console.Write("Enter the Cost: ");
-                            string cost = Console.ReadLine();
+                            en.Cost = Console.ReadLine();
 
                             Console.Write("Enter the Reason: ");
-                            string reason = Console.ReadLine();
+                            en.Reason = Console.ReadLine();
 
                             Console.Write("Enter the Estimate: ");
-                            string estimate = Console.ReadLine();
+                            en.Estimate = Console.ReadLine();
 
                             // save 
-                            sw.WriteLine($"\n{ticketID.ToString()},{summary},{status},{priority},{submitter},{assigned},{watching},{software},{cost},{reason},{estimate}");
+                            tf.AddEnhancementList(en);
+                            
                             // ask a question
                             Console.WriteLine("Do you want more input data (Y/N)? Pressing any key other than 'Y' will exit.");
                             if(Console.ReadLine().ToUpper() == "Y")
@@ -413,7 +364,6 @@ do
                             else
                                 datainput = false;
                         }
-                        sw.Close();
                     }
                     else
                     {
@@ -422,60 +372,50 @@ do
 
                 break;
                 
-                case 3: // Tickets
+                case 3: // Task
                     // read data from file
                     if (File.Exists(taskFile))
                     {
-                        int ticketID = 1;
+                        Task task = new Task();
 
                         // read data from file
-                        StreamReader sr = new(taskFile);
-                        while (!sr.EndOfStream)
+                        Console.ForegroundColor = ConsoleColor.Blue;
+                        foreach(Task ta in tf.TaskList)
                         {
-                            string line = sr.ReadLine();
-                            string[] arr = line.Split(',');
-                            
-                            // check the number
-                            bool result  = int.TryParse(arr[0], out ticketID);
-
-                            // display data
-                            Console.WriteLine(line);
+                            Console.WriteLine(ta.Display());
                         }
-                        sr.Close();
-
-                        StreamWriter sw = File.AppendText(taskFile);
+                        Console.ForegroundColor = ConsoleColor.White;
+                    
                         bool datainput = true;
 
                         while (datainput)
                         {
-                            ticketID++;
-
                             Console.Write("Enter the Summary: ");
-                            string summary = Console.ReadLine();
+                            task.Summary = Console.ReadLine();
 
                             Console.Write("Enter the Status: ");
-                            string status = Console.ReadLine();
+                            task.Status = Console.ReadLine();
 
                             Console.Write("Enter the Priority: ");
-                            string priority = Console.ReadLine();
+                            task.Priority = Console.ReadLine();
 
                             Console.Write("Enter the Submitter: ");
-                            string submitter = Console.ReadLine();
+                            task.Submitter = Console.ReadLine();
 
                             Console.Write("Enter the Assigned: ");
-                            string assigned = Console.ReadLine();
+                            task.Assigned = Console.ReadLine();
 
                             Console.Write("Enter the Watching: ");
-                            string watching = Console.ReadLine();
+                            task.Watching = Console.ReadLine();
 
                             Console.Write("Enter the ProjectName: ");
-                            string projectName = Console.ReadLine();
+                            task.ProjectName = Console.ReadLine();
 
                             Console.Write("Enter the DueDate: ");
-                            string dueDate = Console.ReadLine();
+                            task.DueDate = Console.ReadLine();
 
                             // save 
-                            sw.WriteLine($"\n{ticketID.ToString()},{summary},{status},{priority},{submitter},{assigned},{watching},{projectName},{dueDate}");
+                            tf.AddTaskList(task);
                             // ask a question
                             Console.WriteLine("Do you want more input data (Y/N)? Pressing any key other than 'Y' will exit.");
                             if(Console.ReadLine().ToUpper() == "Y")
@@ -483,7 +423,7 @@ do
                             else
                                 datainput = false;
                         }
-                        sw.Close();
+                        
                     }
                     else
                     {
@@ -494,6 +434,73 @@ do
             }
         }
     }
-} while (choice == "1" || choice == "2"|| choice == "3");
+    else if (choice == "4") // Search data
+    {
+        int selectAddFile = 0;
+
+        Console.WriteLine("\tSelect search file.\n\t1) Tickets\t2) Enhancements\t3)Task");
+        bool selectCheck = int.TryParse(Console.ReadLine(), out selectAddFile);
+        logger.Info($"User select is {selectAddFile}");
+
+        if(selectCheck)
+        {
+            // add data from file
+            switch(selectAddFile)
+            {
+                case 1: // Tickets
+                    Console.ForegroundColor = ConsoleColor.Red;
+
+                    Console.Write("Enter search based on status, priority or submitter: ");
+                    string search = Console.ReadLine();
+                    var status = tf.TicketList.Where(m=>m.Status.Contains(search));
+                    var priority = tf.TicketList.Where(m=>m.Priority.Contains(search));
+                    var submitter = tf.TicketList.Where(m=>m.Submitter.Contains(search));
+
+                    Console.WriteLine($"Matches number is {status.Count()}");
+
+                    foreach(Ticket t in status)
+                    {
+                        Console.WriteLine(t.Display());
+                    }
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
+                case 2: // Enhancements
+                    Console.ForegroundColor = ConsoleColor.Green;
+
+                    Console.Write("Enter search based on status, priority or submitter: ");
+                    string searchE = Console.ReadLine();
+                    var statusE = tf.EnhancementList.Where(m=>m.Status.Contains(searchE));
+                    var priorityE = tf.EnhancementList.Where(m=>m.Priority.Contains(searchE));
+                    var submitterE = tf.EnhancementList.Where(m=>m.Submitter.Contains(searchE));
+
+                    Console.WriteLine($"Matches number is {statusE.Count()}");
+
+                    foreach(Enhancement e in statusE)
+                    {
+                        Console.WriteLine(e.Display());
+                    }
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;
+                case 3: // Task
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    
+                    Console.Write("Enter search based on status, priority or submitter: ");
+                    string searchT = Console.ReadLine();
+                    var statusT = tf.TaskList.Where(m=>m.Status.Contains(searchT));
+                    var priorityT = tf.TaskList.Where(m=>m.Priority.Contains(searchT));
+                    var submitterT = tf.TaskList.Where(m=>m.Submitter.Contains(searchT));
+
+                    Console.WriteLine($"Matches number is {statusT.Count()}");
+
+                    foreach(Task ta in statusT)
+                    {
+                        Console.WriteLine(ta.Display());
+                    }
+                    Console.ForegroundColor = ConsoleColor.White;
+                    break;  
+            }
+        }
+    }
+} while (choice == "1" || choice == "2"|| choice == "3"|| choice == "4");
 
 logger.Info("Program end");
